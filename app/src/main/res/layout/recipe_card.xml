@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/cardView"
+    android:layout_marginTop="1dp"
+    android:layout_width="match_parent"
+    android:layout_height="150dp"
+    card_view:cardElevation="2dp" >
+
+    <ImageView
+        android:id="@+id/recipe_image"
+        android:src="@drawable/cheesecake"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:alpha="0.7"
+        android:background="@color/cardview_dark_background"
+        android:scaleType="centerCrop" />
+
+    <TextView
+        android:textColor="#ffffff"
+        android:id="@+id/recipeName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+        tools:text="Recipe Name" />
+
+</android.support.v7.widget.CardView>

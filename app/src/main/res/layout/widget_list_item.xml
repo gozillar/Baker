@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/ingredientNames"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginTop="16dp"
+            android:textColor="#fa5b75"
+            tools:text="Ingredient Name"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+        <TextView
+            android:layout_below="@+id/ingredientNames"
+            android:id="@+id/ingredientQuantitys"
+            android:textColor="#ffd464"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="6dp"
+            tools:text="Quantity: "
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/ingredientMeasures"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/ingredientNames"
+            android:layout_toRightOf="@+id/ingredientQuantitys"
+            android:layout_alignParentEnd="true"
+            android:gravity="right"
+            android:layout_marginEnd="16dp"
+            android:layout_marginTop="6dp"
+            tools:text="Measure: "
+            android:textSize="16sp"
+            android:textColor="#ffd464" />
+
+    </RelativeLayout>
+
+</LinearLayout>
