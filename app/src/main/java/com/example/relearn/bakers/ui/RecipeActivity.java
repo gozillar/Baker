@@ -3,6 +3,7 @@ package com.example.relearn.bakers.ui;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
@@ -22,6 +23,7 @@ public class RecipeActivity extends AppCompatActivity implements RecipeDetailsFr
 
     Recipe recipe;
     ActionBar actionBar;
+    boolean twoPanes;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,18 +37,45 @@ public class RecipeActivity extends AppCompatActivity implements RecipeDetailsFr
 
         actionBar.setTitle(recipe.getName());
 
-        getSupportFragmentManager().beginTransaction()
-                .add(R.id.recipeContainer, new RecipeDetailsFragment().newInstance(recipe))
-                .commit();
+        if (findViewById(R.id.tablet_linear_layout) != null) {
+            twoPanes = true; // Double-pane mode
+
+            if (savedInstanceState == null) {
+                FragmentManager fragmentManager = getSupportFragmentManager();
+                fragmentManager.beginTransaction()
+                        .replace(R.id.recipeFragment, new RecipeDetailsFragment().newInstance(recipe))
+                        .commit();
+                fragmentManager.beginTransaction()
+                        .replace(R.id.recipeContainer, new IngredientsFragment().newInstance(recipe))
+                        .commit();
+            }
+        } else {
+            twoPanes = false; // Single-pane mode
+
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.recipeContainer, new RecipeDetailsFragment().newInstance(recipe))
+                    .commit();
+        }
     }
 
     @Override
     public void onIngredientsSelected(View v, Recipe recipe) {
-        if (v.getId() == R.id.ingredientCardView) {
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.recipeContainer, new IngredientsFragment().newInstance(recipe))
-                    .addToBackStack(IngredientsFragment.class.getSimpleName())
-                    .commit();
+
+        if (twoPanes) {
+            if (v.getId() == R.id.ingredientCardView) {
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.recipeContainer, new IngredientsFragment().newInstance(recipe))
+                        .commit();
+            } else {
+
+                if (v.getId() == R.id.ingredientCardView) {
+                    getSupportFragmentManager().beginTransaction()
+                            .replace(R.id.recipeContainer, new IngredientsFragment().newInstance(recipe))
+                            .addToBackStack(IngredientsFragment.class.getSimpleName())
+                            .commit();
+                }
+            }
+
         }
     }
 
@@ -61,15 +90,22 @@ public class RecipeActivity extends AppCompatActivity implements RecipeDetailsFr
         bundle.putString("videoURL", step.getVideoURL());
         bundle.putString("thumbnailUrl", step.getThumbnailURL());
 
+
         if (bundle != null) {
 
             videoFragment.setArguments(bundle);
 
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.recipeContainer, videoFragment)
-                    .addToBackStack(StepFragment.class.getSimpleName())
-                    .commit();
-            actionBar.setTitle(sDescription);
+            if (twoPanes) {
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.recipeContainer, videoFragment)
+                        .commit();
+            } else {
+                actionBar.setTitle(sDescription);
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.recipeContainer, videoFragment)
+                        .addToBackStack(StepFragment.class.getSimpleName())
+                        .commit();
+            }
         }
 
     }

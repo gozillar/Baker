@@ -6,31 +6,42 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:orientation="vertical"
         android:layout_height="match_parent">
 
         <TextView
             android:id="@+id/ingredientNames"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
-            android:layout_marginTop="16dp"
-            android:textColor="#fa5b75"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="8dp"
+
             tools:text="Ingredient Name"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
         <TextView
             android:layout_below="@+id/ingredientNames"
             android:id="@+id/ingredientQuantitys"
-            android:textColor="#ffd464"
+            android:textColor="#f16160"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="6dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="3dp"
             tools:text="Quantity: "
-            android:textSize="16sp" />
+            android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+
+        <LinearLayout
+            android:layout_below="@id/ingredientQuantitys"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:id="@+id/view1"
+
+            android:layout_marginTop="8dp"
+            android:background="#f2f2f2"
+            android:orientation="horizontal" />
 
     </RelativeLayout>
+
+
 
 </LinearLayout>
