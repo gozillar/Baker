@@ -1,9 +1,11 @@
 package com.example.relearn.bakers.ui.fragments;
 
+import android.content.Context;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +16,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.relearn.bakers.R;
+import com.example.relearn.bakers.model.Recipe;
 import com.example.relearn.bakers.model.Step;
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.ExoPlayerFactory;
@@ -30,11 +33,15 @@ public class VideoFragment extends Fragment {
 
     private String mDescription;
     private String mVideoURL, thumbnailUrl;
+    private int pos,size = 0;
     private SimpleExoPlayerView mPlayerView;
     private SimpleExoPlayer mPlayer;
     private TextView descriptionText;
     private ProgressBar mProgressBar;
     private ImageView imageView;
+    private FloatingActionButton prev, next;
+
+    VideoClickListener mCallback;
 
     public static final String AUTOPLAY = "autoplay";
     public static final String CURRENT_WINDOW_INDEX = "current_window_index";
@@ -65,6 +72,8 @@ public class VideoFragment extends Fragment {
         descriptionText = (TextView) view.findViewById(R.id.descriptionText);
         mProgressBar = (ProgressBar) view.findViewById(R.id.videoProgress);
         imageView = (ImageView) view.findViewById(R.id.thumbnail);
+        prev = (FloatingActionButton) view.findViewById(R.id.previous);
+        next = (FloatingActionButton) view.findViewById(R.id.next);
 
         if (savedInstanceState != null) {
             playbackPosition = savedInstanceState.getLong(PLAYBACK_POSITION, 0);
@@ -77,11 +86,33 @@ public class VideoFragment extends Fragment {
             mDescription = bundle.getString("description");
             mVideoURL = bundle.getString("videoURL");
             thumbnailUrl = bundle.getString("thumbnailUrl");
-        }else{
+            pos = bundle.getInt("position");
+            size = bundle.getInt("size");
+        }else {
             mDescription = getContext().getResources().getString(R.string.app_name);
             mVideoURL = "";
             thumbnailUrl = "";
         }
+
+        if (pos == 0)
+            prev.setVisibility(View.INVISIBLE);
+        if (pos == size - 1)
+            next.setVisibility(View.INVISIBLE);
+
+        prev.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mCallback.onPreviousSelected(pos - 1);
+            }
+        });
+
+        next.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mCallback.onNextSelected(pos + 1);
+            }
+        });
+
 
         if (imageView!= null && descriptionText!= null) {
             Glide.with(getContext()).load(thumbnailUrl).into(imageView);
@@ -176,6 +207,27 @@ public class VideoFragment extends Fragment {
         if (Util.SDK_INT > 23) {
             releasePlayer();
         }
+    }
+
+    public interface VideoClickListener {
+        void onNextSelected(int position);
+        void onPreviousSelected(int position);
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof VideoFragment.VideoClickListener) {
+            mCallback = (VideoFragment.VideoClickListener) context;
+        } else {
+            throw new RuntimeException(context.toString() + "must implement VideoClickListener");
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mCallback = null;
     }
 
 }

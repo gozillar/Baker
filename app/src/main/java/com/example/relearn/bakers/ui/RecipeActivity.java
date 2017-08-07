@@ -19,7 +19,9 @@ import com.example.relearn.bakers.ui.fragments.VideoFragment;
 import com.example.relearn.bakers.model.Recipe;
 import com.example.relearn.bakers.model.Step;
 
-public class RecipeActivity extends AppCompatActivity implements RecipeDetailsFragment.RecipeClickListener, StepFragment.OnFragmentInteractionListener {
+import java.util.ArrayList;
+
+public class RecipeActivity extends AppCompatActivity implements RecipeDetailsFragment.RecipeClickListener, StepFragment.OnFragmentInteractionListener, VideoFragment.VideoClickListener {
 
     Recipe recipe;
     ActionBar actionBar;
@@ -39,9 +41,9 @@ public class RecipeActivity extends AppCompatActivity implements RecipeDetailsFr
 
         if (findViewById(R.id.tablet_linear_layout) != null) {
             twoPanes = true; // Double-pane mode
-
+            FragmentManager fragmentManager = getSupportFragmentManager();
             if (savedInstanceState == null) {
-                FragmentManager fragmentManager = getSupportFragmentManager();
+
                 fragmentManager.beginTransaction()
                         .replace(R.id.recipeFragment, new RecipeDetailsFragment().newInstance(recipe))
                         .commit();
@@ -52,40 +54,46 @@ public class RecipeActivity extends AppCompatActivity implements RecipeDetailsFr
         } else {
             twoPanes = false; // Single-pane mode
 
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.recipeContainer, new RecipeDetailsFragment().newInstance(recipe))
-                    .commit();
+                    getSupportFragmentManager().beginTransaction()
+                            .add(R.id.recipeContainer, new RecipeDetailsFragment().newInstance(recipe))
+                            .commit();
+
+
         }
     }
+
+
 
     @Override
     public void onIngredientsSelected(View v, Recipe recipe) {
 
-        if (twoPanes) {
-            if (v.getId() == R.id.ingredientCardView) {
+        if (v.getId() == R.id.ingredientCardView) {
+
+            if (twoPanes) {
                 getSupportFragmentManager().beginTransaction()
                         .replace(R.id.recipeContainer, new IngredientsFragment().newInstance(recipe))
                         .commit();
             } else {
-
-                if (v.getId() == R.id.ingredientCardView) {
                     getSupportFragmentManager().beginTransaction()
                             .replace(R.id.recipeContainer, new IngredientsFragment().newInstance(recipe))
                             .addToBackStack(IngredientsFragment.class.getSimpleName())
                             .commit();
-                }
             }
-
         }
+
     }
 
     @Override
     public void onStepSelected(int position) {
 
         Step step = recipe.getSteps().get(position);
+        int length = recipe.getSteps().size();
         VideoFragment videoFragment = new VideoFragment();
         Bundle bundle = new Bundle();
         String sDescription = step.getShortDescription();
+
+        bundle.putInt("size", length);
+        bundle.putInt("position", position);
         bundle.putString("description", step.getDescription());
         bundle.putString("videoURL", step.getVideoURL());
         bundle.putString("thumbnailUrl", step.getThumbnailURL());
@@ -111,6 +119,16 @@ public class RecipeActivity extends AppCompatActivity implements RecipeDetailsFr
     }
 
     @Override
+    public void onNextSelected(int position) {
+        onStepSelected(position);
+    }
+
+    @Override
+    public void onPreviousSelected(int position) {
+        onStepSelected(position);
+    }
+
+    @Override
     public void onFragmentInteraction(Uri uri) {
 
     }
@@ -132,5 +150,19 @@ public class RecipeActivity extends AppCompatActivity implements RecipeDetailsFr
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        Recipe recipeContents = recipe;
+        outState.putParcelable("recipe contents", recipeContents);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+
+        recipe = savedInstanceState.getParcelable("recipe contents");
     }
 }

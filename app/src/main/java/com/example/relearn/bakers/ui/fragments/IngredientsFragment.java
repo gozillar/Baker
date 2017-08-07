@@ -60,4 +60,15 @@ public class IngredientsFragment extends Fragment {
 
         return view;
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        int scrollposition = 0;
+        if (recyclerView.getLayoutManager() != null) {
+            scrollposition = ((LinearLayoutManager) recyclerView.getLayoutManager())
+                    .findFirstCompletelyVisibleItemPosition();
+            recyclerView.scrollToPosition(scrollposition);
+        }
+    }
 }

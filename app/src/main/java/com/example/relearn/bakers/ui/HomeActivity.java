@@ -41,11 +41,11 @@ public class HomeActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private ArrayList<Integer> mImages;
     private ApiClient apiClient;
-    private ArrayList<Recipe> recipes = new ArrayList<>();
+    protected ArrayList<Recipe> recipes = new ArrayList<>();
 
-    private HomeAdapter homeAdapter;
-    private RecyclerView.LayoutManager layoutManager;
-    private LayoutManagerType currentLayoutManagerType;
+    protected HomeAdapter homeAdapter;
+    protected RecyclerView.LayoutManager layoutManager;
+    protected LayoutManagerType currentLayoutManagerType;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,11 +71,21 @@ public class HomeActivity extends AppCompatActivity {
             setRecyclerViewLayoutManager(LayoutManagerType.GRID_LAYOUT_MANAGER);
         }
 
-        homeAdapter = new HomeAdapter(recipes, mImages);
-        recyclerView.setAdapter(homeAdapter);
-        progressBar.setVisibility(View.VISIBLE);
+        if (savedInstanceState != null) {
+            if (savedInstanceState.containsKey("recipe contents")) {
+                ArrayList<Recipe> recipess = savedInstanceState
+                        .getParcelableArrayList("recipe contents");
+                homeAdapter = new HomeAdapter(recipess, mImages);
+                recyclerView.setAdapter(homeAdapter);
+            }
+        } else {
+            homeAdapter = new HomeAdapter(recipes, mImages);
+            recyclerView.setAdapter(homeAdapter);
+            progressBar.setVisibility(View.VISIBLE);
 
-        loadRecipeData();
+            getIdlingResource();
+            loadRecipeData();
+        }
 
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -193,4 +203,16 @@ public class HomeActivity extends AppCompatActivity {
         return mIdlingResource;
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        ArrayList<Recipe> recipeContents = recipes;
+        outState.putParcelableArrayList("recipe contents", recipeContents);
+
+    }
 }

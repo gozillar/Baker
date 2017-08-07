@@ -40,8 +40,14 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.HomeViewHolder
         final Recipe recipes = recipeList.get(position);
 
         holder.recipeName.setText(recipes.getName());
-        Glide.with(holder.itemView.getContext())
-                .load(mImages.get(position)).into(holder.recipeImage);
+        if (recipes.getImage() == "") {
+            Glide.with(holder.itemView.getContext())
+                    .load(mImages.get(position)).into(holder.recipeImage);
+        } else {
+            Glide.with(holder.itemView.getContext())
+                    .load(recipes.getImage()).into(holder.recipeImage);
+        }
+
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
