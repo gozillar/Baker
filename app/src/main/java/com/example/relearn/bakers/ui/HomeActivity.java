@@ -1,9 +1,11 @@
 package com.example.relearn.bakers.ui;
 
 import android.content.res.Configuration;
+import android.net.ConnectivityManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.VisibleForTesting;
+import android.support.design.widget.Snackbar;
 import android.support.test.espresso.IdlingResource;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -71,20 +73,26 @@ public class HomeActivity extends AppCompatActivity {
             setRecyclerViewLayoutManager(LayoutManagerType.GRID_LAYOUT_MANAGER);
         }
 
-        if (savedInstanceState != null) {
-            if (savedInstanceState.containsKey("recipe contents")) {
-                ArrayList<Recipe> recipess = savedInstanceState
-                        .getParcelableArrayList("recipe contents");
-                homeAdapter = new HomeAdapter(recipess, mImages);
+        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
+        if (connectivityManager.getActiveNetworkInfo() != null  && connectivityManager.getActiveNetworkInfo().isConnected()){
+            if (savedInstanceState != null) {
+                if (savedInstanceState.containsKey("recipe contents")) {
+                    ArrayList<Recipe> recipess = savedInstanceState
+                            .getParcelableArrayList("recipe contents");
+                    homeAdapter = new HomeAdapter(recipess, mImages);
+                    recyclerView.setAdapter(homeAdapter);
+                }
+            } else {
+                homeAdapter = new HomeAdapter(recipes, mImages);
                 recyclerView.setAdapter(homeAdapter);
-            }
-        } else {
-            homeAdapter = new HomeAdapter(recipes, mImages);
-            recyclerView.setAdapter(homeAdapter);
-            progressBar.setVisibility(View.VISIBLE);
+                progressBar.setVisibility(View.VISIBLE);
 
-            getIdlingResource();
-            loadRecipeData();
+                getIdlingResource();
+                loadRecipeData();
+            }
+        }else {
+            Snackbar snackbar = Snackbar.make(recyclerView, R.string.failedInternetRequest, Snackbar.LENGTH_INDEFINITE);
+            snackbar.show();
         }
 
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -111,7 +119,9 @@ public class HomeActivity extends AppCompatActivity {
                     showUIDataView();
                     homeAdapter.refresh((ArrayList<Recipe>) recipes);
                 } else {
-                    Toast.makeText(HomeActivity.this, R.string.failedRequest, Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(HomeActivity.this, R.string.failedRequest, Toast.LENGTH_SHORT).show();
+                    Snackbar snackbar = Snackbar.make(recyclerView, R.string.failedRequest, Snackbar.LENGTH_LONG);
+                    snackbar.show();
                 }
             }
 

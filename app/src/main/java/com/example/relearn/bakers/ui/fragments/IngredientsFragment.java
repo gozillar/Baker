@@ -2,6 +2,8 @@ package com.example.relearn.bakers.ui.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -23,6 +25,7 @@ public class IngredientsFragment extends Fragment {
     List<Ingredient> ingredients;
     RecyclerView recyclerView;
     IngredientAdapter ingredientsAdapter;
+    private static final String SAVED_LAYOUT_MANAGER = "classname.recycler.layout";
 
     public IngredientsFragment() {
 
@@ -34,6 +37,22 @@ public class IngredientsFragment extends Fragment {
         args.putParcelable(Intent.EXTRA_TEXT, recipe);
         ingredientsFragment.setArguments(args);
         return ingredientsFragment;
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outstate) {
+        super.onSaveInstanceState(outstate);
+        outstate.putParcelable(SAVED_LAYOUT_MANAGER, recyclerView.getLayoutManager().onSaveInstanceState());
+    }
+
+    @Override
+    public void onViewStateRestored(Bundle savedInstanceState) {
+        super.onViewStateRestored(savedInstanceState);
+        if (savedInstanceState != null) {
+            Parcelable savedRecyclerLayoutState = savedInstanceState.getParcelable(SAVED_LAYOUT_MANAGER);
+            recyclerView.getLayoutManager().onRestoreInstanceState(savedRecyclerLayoutState);
+        }
+        super.onViewStateRestored(savedInstanceState);
     }
 
     @Override
@@ -61,7 +80,7 @@ public class IngredientsFragment extends Fragment {
         return view;
     }
 
-    @Override
+    /*@Override
     public void onResume() {
         super.onResume();
         int scrollposition = 0;
@@ -70,5 +89,5 @@ public class IngredientsFragment extends Fragment {
                     .findFirstCompletelyVisibleItemPosition();
             recyclerView.scrollToPosition(scrollposition);
         }
-    }
+    }*/
 }

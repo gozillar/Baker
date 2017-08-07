@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -14,14 +15,11 @@ import android.view.View;
 import com.example.relearn.bakers.ui.fragments.IngredientsFragment;
 import com.example.relearn.bakers.R;
 import com.example.relearn.bakers.ui.fragments.RecipeDetailsFragment;
-import com.example.relearn.bakers.ui.fragments.StepFragment;
 import com.example.relearn.bakers.ui.fragments.VideoFragment;
 import com.example.relearn.bakers.model.Recipe;
 import com.example.relearn.bakers.model.Step;
 
-import java.util.ArrayList;
-
-public class RecipeActivity extends AppCompatActivity implements RecipeDetailsFragment.RecipeClickListener, StepFragment.OnFragmentInteractionListener, VideoFragment.VideoClickListener {
+public class RecipeActivity extends AppCompatActivity implements RecipeDetailsFragment.RecipeClickListener, VideoFragment.VideoClickListener {
 
     Recipe recipe;
     ActionBar actionBar;
@@ -39,7 +37,13 @@ public class RecipeActivity extends AppCompatActivity implements RecipeDetailsFr
 
         actionBar.setTitle(recipe.getName());
 
-        if (findViewById(R.id.tablet_linear_layout) != null) {
+        DisplayMetrics metrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(metrics);
+
+        float yInches= metrics.heightPixels/metrics.ydpi;
+        float xInches= metrics.widthPixels/metrics.xdpi;
+        double diagonalInches = Math.sqrt(xInches*xInches + yInches*yInches);
+        if (diagonalInches>=6.5) {
             twoPanes = true; // Double-pane mode
             FragmentManager fragmentManager = getSupportFragmentManager();
             if (savedInstanceState == null) {
@@ -55,7 +59,7 @@ public class RecipeActivity extends AppCompatActivity implements RecipeDetailsFr
             twoPanes = false; // Single-pane mode
 
                     getSupportFragmentManager().beginTransaction()
-                            .add(R.id.recipeContainer, new RecipeDetailsFragment().newInstance(recipe))
+                            .replace(R.id.recipeContainer, new RecipeDetailsFragment().newInstance(recipe))
                             .commit();
 
 
@@ -111,7 +115,7 @@ public class RecipeActivity extends AppCompatActivity implements RecipeDetailsFr
                 actionBar.setTitle(sDescription);
                 getSupportFragmentManager().beginTransaction()
                         .replace(R.id.recipeContainer, videoFragment)
-                        .addToBackStack(StepFragment.class.getSimpleName())
+                        .addToBackStack(VideoFragment.class.getSimpleName())
                         .commit();
             }
         }
@@ -126,11 +130,6 @@ public class RecipeActivity extends AppCompatActivity implements RecipeDetailsFr
     @Override
     public void onPreviousSelected(int position) {
         onStepSelected(position);
-    }
-
-    @Override
-    public void onFragmentInteraction(Uri uri) {
-
     }
 
     @Override
