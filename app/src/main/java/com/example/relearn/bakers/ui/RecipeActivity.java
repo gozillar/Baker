@@ -6,11 +6,13 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
 import com.example.relearn.bakers.ui.fragments.IngredientsFragment;
 import com.example.relearn.bakers.R;
@@ -22,28 +24,30 @@ import com.example.relearn.bakers.model.Step;
 public class RecipeActivity extends AppCompatActivity implements RecipeDetailsFragment.RecipeClickListener, VideoFragment.VideoClickListener {
 
     Recipe recipe;
-    ActionBar actionBar;
+//    ActionBar actionBar;\
+    Toolbar toolbar;
     boolean twoPanes;
+//    TextView toolbarTitle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_recipe);
-        actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
+
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+//        toolbarTitle = (TextView) findViewById(R.id.toolbar_title);
+
+        setSupportActionBar(toolbar);
+
+        // Remove default title text
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         recipe = getIntent().getParcelableExtra(Intent.EXTRA_TEXT);
 
-        actionBar.setTitle(recipe.getName());
+        toolbar.setTitle(recipe.getName());
 
-        DisplayMetrics metrics = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(metrics);
-
-        float yInches= metrics.heightPixels/metrics.ydpi;
-        float xInches= metrics.widthPixels/metrics.xdpi;
-        double diagonalInches = Math.sqrt(xInches*xInches + yInches*yInches);
-        if (diagonalInches>=6.5) {
+        if (findViewById(R.id.tablet_linear_layout) != null) {
             twoPanes = true; // Double-pane mode
             FragmentManager fragmentManager = getSupportFragmentManager();
             if (savedInstanceState == null) {
@@ -57,12 +61,10 @@ public class RecipeActivity extends AppCompatActivity implements RecipeDetailsFr
             }
         } else {
             twoPanes = false; // Single-pane mode
-
+                if(savedInstanceState == null)
                     getSupportFragmentManager().beginTransaction()
                             .replace(R.id.recipeContainer, new RecipeDetailsFragment().newInstance(recipe))
                             .commit();
-
-
         }
     }
 
@@ -112,7 +114,7 @@ public class RecipeActivity extends AppCompatActivity implements RecipeDetailsFr
                         .replace(R.id.recipeContainer, videoFragment)
                         .commit();
             } else {
-                actionBar.setTitle(sDescription);
+                toolbar.setTitle(sDescription);
                 getSupportFragmentManager().beginTransaction()
                         .replace(R.id.recipeContainer, videoFragment)
                         .addToBackStack(VideoFragment.class.getSimpleName())

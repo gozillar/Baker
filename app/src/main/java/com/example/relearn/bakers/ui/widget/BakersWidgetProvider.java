@@ -35,24 +35,7 @@ public class BakersWidgetProvider implements RemoteViewsService.RemoteViewsFacto
 
     public BakersWidgetProvider(Context context, Intent intent) {
         mContext = context;
-        /*recipe = intent.getParcelableExtra(Intent.EXTRA_TEXT);
 
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
-        String preferenceString = sharedPreferences.getString(mContext.getResources().getString(R.string.listPreferencekey), mContext.getResources().getString(R.string.nutella_pie_key));
-
-        int position;
-
-        if (preferenceString == mContext.getResources().getString(R.string.nutella_pie_key)){
-            position = 0;
-        }else if (preferenceString == mContext.getResources().getString(R.string.Brownies_key)){
-            position = 1;
-        }else if (preferenceString == mContext.getResources().getString(R.string.yello_cake_key)){
-            position = 2;
-        }else{
-            position = 3;
-        }
-
-        ingredients = recipe.getIngredients();*/
         if (intent.hasExtra("arrayString")) {
             String s = intent.getStringExtra("arrayString");
 
@@ -61,11 +44,11 @@ public class BakersWidgetProvider implements RemoteViewsService.RemoteViewsFacto
 
             int Position;
 
-            if (preferenceString == mContext.getResources().getString(R.string.nutella_pie_key)){
+            if (preferenceString.equals(mContext.getResources().getString(R.string.nutella_pie_key)) ){
                 Position = 0;
-            }else if (preferenceString == mContext.getResources().getString(R.string.Brownies_key)){
+            }else if (preferenceString.equals(mContext.getResources().getString(R.string.Brownies_key)) ){
                 Position = 1;
-            }else if (preferenceString == mContext.getResources().getString(R.string.yello_cake_key)){
+            }else if (preferenceString.equals(mContext.getResources().getString(R.string.yello_cake_key))){
                 Position = 2;
             }else{
                 Position = 3;

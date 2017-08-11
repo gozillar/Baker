@@ -76,9 +76,12 @@ public class HomeActivity extends AppCompatActivity {
         ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
         if (connectivityManager.getActiveNetworkInfo() != null  && connectivityManager.getActiveNetworkInfo().isConnected()){
             if (savedInstanceState != null) {
-                if (savedInstanceState.containsKey("recipe contents")) {
+                if (savedInstanceState.containsKey("recipe_contents")) {
                     ArrayList<Recipe> recipess = savedInstanceState
-                            .getParcelableArrayList("recipe contents");
+                            .getParcelableArrayList("recipe_contents");
+                    int scrollPos = savedInstanceState.getInt("position");
+                    recyclerView.scrollToPosition(scrollPos);
+
                     homeAdapter = new HomeAdapter(recipess, mImages);
                     recyclerView.setAdapter(homeAdapter);
                 }
@@ -105,6 +108,9 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     void loadRecipeData() {
+        if(mIdlingResource != null){
+            mIdlingResource.setIdleState(false);
+        }
         recyclerView.setVisibility(View.INVISIBLE);
         errorTextView.setVisibility(View.INVISIBLE);
         ApiInterface apiInterface = apiClient.getService();
@@ -118,6 +124,10 @@ public class HomeActivity extends AppCompatActivity {
 
                     showUIDataView();
                     homeAdapter.refresh((ArrayList<Recipe>) recipes);
+                    if(mIdlingResource != null) {
+                        mIdlingResource.setIdleState(true);
+                    }
+
                 } else {
                     //Toast.makeText(HomeActivity.this, R.string.failedRequest, Toast.LENGTH_SHORT).show();
                     Snackbar snackbar = Snackbar.make(recyclerView, R.string.failedRequest, Snackbar.LENGTH_LONG);
@@ -221,8 +231,15 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        ArrayList<Recipe> recipeContents = recipes;
-        outState.putParcelableArrayList("recipe contents", recipeContents);
+        int scrollPosition = 0;
+//        ArrayList<Recipe> recipeContents = recipes;
+        outState.putParcelableArrayList("recipe_contents", recipes);
+        // If a layout manager has already been set, get current scroll position.
+        if (recyclerView.getLayoutManager() != null) {
+            scrollPosition = ((LinearLayoutManager) recyclerView.getLayoutManager())
+                    .findFirstCompletelyVisibleItemPosition();
+        }
 
+        outState.putInt("position", scrollPosition);
     }
 }
