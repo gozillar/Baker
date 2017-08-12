@@ -1,0 +1,75 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:id="@+id/relativeLayout0">
+
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="60dp"
+    android:layout_marginBottom="3dp"
+    android:layout_marginTop="3dp"
+    android:background="#F2F2F2"
+    android:padding="@dimen/widget_margin" >
+
+
+            <ImageView
+                android:paddingLeft="4dp"
+                android:layout_centerVertical="true"
+                android:id="@+id/image"
+                android:src="@drawable/ic_cake_black_24dp"
+                android:layout_width="50dp"
+                android:layout_height="50dp" />
+
+            <LinearLayout
+                android:id="@+id/text_container"
+                android:layout_width="match_parent"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentRight="true"
+                android:layout_toRightOf="@id/image"
+                android:orientation="vertical"
+                android:paddingLeft="10dp"
+                android:layout_height="@dimen/list_item_height">
+
+                <TextView
+                    android:fontFamily="sans-serif-light"
+                    android:text="Nutella Pie"
+                    android:lineSpacingExtra="2dp"
+                    android:ellipsize="end"
+                    android:id="@+id/recipeNames0"
+                    android:textAppearance="?android:textAppearanceMedium"
+                    android:textStyle="bold"
+                    android:textColor="#000000"
+                    android:layout_weight="1"
+                    android:gravity="bottom"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp" />
+
+                <TextView
+                    android:id="@+id/default_text_view"
+                    android:text="Ingredients"
+                    android:textAppearance="?android:textAppearanceSmall"
+                    android:layout_weight="1"
+                    android:gravity="top"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp" />
+
+            </LinearLayout>
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="16dp"
+                android:src="@drawable/ic_launch_black_24dp"
+                android:layout_height="24dp" />
+
+        </RelativeLayout>
+
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/listView0" />
+
+</LinearLayout>

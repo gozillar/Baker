@@ -1,0 +1,81 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#ffffff"
+    android:id="@+id/relativeLayout">
+
+    <RelativeLayout
+        android:paddingTop="5dp"
+        android:layout_width="match_parent"
+        android:background="@color/colorPrimary"
+        android:layout_height="60dp">
+
+    <ImageView
+        android:paddingLeft="4dp"
+        android:layout_centerVertical="true"
+        android:id="@+id/image"
+        android:src="@drawable/ic_cake_black_24dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp" />
+
+    <LinearLayout
+        android:id="@+id/text_containerss"
+        android:layout_width="match_parent"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_toRightOf="@id/image"
+        android:orientation="vertical"
+        android:paddingLeft="10dp"
+        android:layout_height="@dimen/list_item_height">
+
+                <TextView
+                    android:text="Nutella Pie"
+                    android:lineSpacingExtra="2dp"
+                    android:ellipsize="end"
+                    android:id="@+id/recipeNames"
+                    android:textAppearance="?android:textAppearanceLarge"
+                    android:textColor="#ffffff"
+                    android:layout_weight="1"
+                    android:gravity="bottom"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp" />
+
+                <TextView
+                    android:id="@+id/default_text_view"
+                    android:text="Ingredients"
+                    android:textAppearance="?android:textAppearanceSmall"
+                    android:layout_weight="1"
+                    android:gravity="top"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp" />
+
+    </LinearLayout>
+
+    <ImageView
+        android:layout_width="24dp"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="16dp"
+        android:src="@drawable/ic_launch_black_24dp"
+        android:layout_height="24dp" />
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <ListView
+            android:id="@+id/listViewss"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+
+
+    </LinearLayout>
+
+
+</LinearLayout>
